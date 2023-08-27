@@ -1,0 +1,7 @@
+# { spCoinSimpleSwapTest } TESTING ALIAS MANAGEMENT
+alias ta=". $SPONSOR_COIN_ENV/.ta"
+alias tm=". $SPONSOR_COIN_ENV/.tm"
+alias vta="vi $SPONSOR_COIN_ENV/.ta;ta"
+
+# { spCoinSimpleSwapTest } TESTING ALIAS COMMAND'S
+alias runtest='clear; node runAlphaRouter.js'

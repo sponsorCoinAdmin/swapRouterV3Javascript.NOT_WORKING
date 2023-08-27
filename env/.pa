@@ -1,0 +1,6 @@
+# { spCoinSimpleSwapTest } PROJECT ALIAS COMMANDS
+alias pa=". $SPONSOR_COIN_ENV/.pa"
+alias pm=". $SPONSOR_COIN_ENV/.pm"
+alias vpa="vi $SPONSOR_COIN_ENV/.pa;pa"
+
+# { spCoinSimpleSwapTest } PROJECT ALIAS COMMAND'S

@@ -21,19 +21,21 @@ const decimals0 = 18
 // const address0 = '0xc778417e063141139fce010982780140aa0cd5ab'
 const address0 = '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14'
 
-const name1 = 'Uniswap Token'
-const symbol1 = 'UNI'
-const decimals1 = 18
-// const address1 = '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'
+const spCoinName = 'sponsorCoin_V0001'
+const spCoinSymbol = 'SPCT_V001'
 const spCoinAddress = '0xBabA55c7dcE20782fBe8B275216F16d262a70754'
+
+const name1 = spCoinName
+const symbol1 = spCoinSymbol
+const decimals1 = 18
 const address1 = spCoinAddress
 
 console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
 const WETH = new Token(chainId, address0, decimals0, symbol0, name0)
-const UNI = new Token(chainId, address1, decimals1, symbol1, name1)
+const SPCOIN = new Token(chainId, address1, decimals1, symbol1, name1)
 let msg
-msg = "UNI = new Token( " + 
+msg = "SPCOIN = new Token( " + 
 "\nchainId + " + chainId +
 "\naddress1 " + address1 +
 "\ndecimals1 " + decimals1 +
@@ -50,7 +52,7 @@ async function main() {
 
   const route = await router.route(
     inputAmount,
-    UNI,
+    SPCOIN,
     TradeType.EXACT_INPUT,
     {
       recipient: WALLET_ADDRESS,
