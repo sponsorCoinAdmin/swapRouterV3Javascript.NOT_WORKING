@@ -1,16 +1,17 @@
+require('dotenv').config()
 const { AlphaRouter } = require('@uniswap/smart-order-router')
 const { Token, CurrencyAmount, TradeType, Percent } = require('@uniswap/sdk-core')
 const { ethers, BigNumber } = require('ethers')
 const JSBI  = require('jsbi') // jsbi@3.2.5
 
-const V3_SWAP_ROUTER_ADDRESS = '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45'
+// const V3_SWAP_ROUTER_ADDRESS = '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45'
+let V3_SWAP_ROUTER_ADDRESS = process.env.SWAPROUTER_025
 
-require('dotenv').config()
 const WALLET_ADDRESS = process.env.WALLET_ADDRESS
 const WALLET_SECRET = process.env.WALLET_SECRET
-const INFURA_TEST_URL = process.env.INFURA_TEST_URL
+const INFURA_SEPOLIA_TEST_URL = process.env.INFURA_SEPOLIA_TEST_URL
 
-const web3Provider = new ethers.providers.JsonRpcProvider(INFURA_TEST_URL) // Ropsten
+const web3Provider = new ethers.providers.JsonRpcProvider(INFURA_SEPOLIA_TEST_URL) // Ropsten
 
 const chainId = 5
 const router = new AlphaRouter({ chainId: chainId, provider: web3Provider})
@@ -30,7 +31,6 @@ const symbol1 = spCoinSymbol
 const decimals1 = 18
 const address1 = spCoinAddress
 
-console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
 const WETH = new Token(chainId, address0, decimals0, symbol0, name0)
 const SPCOIN = new Token(chainId, address1, decimals1, symbol1, name1)
@@ -45,10 +45,13 @@ console.log (msg)
 
 const wei = ethers.utils.parseUnits('0.01', 18)
 const inputAmount = CurrencyAmount.fromRawAmount(WETH, JSBI.BigInt(wei))
-console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+console.log ("wei         = ", wei)
+console.log ("inputAmount = ", inputAmount)
+console.log ("INFURA_SEPOLIA_TEST_URL = ",INFURA_SEPOLIA_TEST_URL)
 
 async function main() {
-    console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
+  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+  console.log('Swap Router Address = ' + V3_SWAP_ROUTER_ADDRESS)
 
   const route = await router.route(
     inputAmount,
@@ -60,11 +63,11 @@ async function main() {
       deadline: Math.floor(Date.now()/1000 + 1800)
     }
   )
-  console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+  console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
 
   console.log(`Quote Exact In: ${route.quote.toFixed(10)}`)
 
-  console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+  console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
   const transaction = {
     data: route.methodParameters.calldata,
     to: V3_SWAP_ROUTER_ADDRESS,

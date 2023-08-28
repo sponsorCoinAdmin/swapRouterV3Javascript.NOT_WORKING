@@ -4,4 +4,4 @@ alias tm=". $SPONSOR_COIN_ENV/.tm"
 alias vta="vi $SPONSOR_COIN_ENV/.ta;ta"
 
 # { spCoinSimpleSwapTest } TESTING ALIAS COMMAND'S
-alias runtest='clear; node runAlphaRouter.js'
+alias runtest='clear; clear; node runAlphaRouter.js'
