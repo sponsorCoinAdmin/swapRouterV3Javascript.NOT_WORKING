@@ -9,9 +9,9 @@ let V3_SWAP_ROUTER_ADDRESS = process.env.SWAPROUTER_025
 
 const WALLET_ADDRESS = process.env.WALLET_ADDRESS
 const WALLET_SECRET = process.env.WALLET_SECRET
-const INFURA_SEPOLIA_TEST_URL = process.env.INFURA_SEPOLIA_TEST_URL
+const SEPOLIA_INFURA_TEST_URL = process.env.SEPOLIA_INFURA_TEST_URL
 
-const web3Provider = new ethers.providers.JsonRpcProvider(INFURA_SEPOLIA_TEST_URL) // Ropsten
+const web3Provider = new ethers.providers.JsonRpcProvider(SEPOLIA_INFURA_TEST_URL) // Ropsten
 
 const chainId = 5
 const router = new AlphaRouter({ chainId: chainId, provider: web3Provider})
@@ -47,7 +47,7 @@ const wei = ethers.utils.parseUnits('0.01', 18)
 const inputAmount = CurrencyAmount.fromRawAmount(WETH, JSBI.BigInt(wei))
 console.log ("wei         = ", wei)
 console.log ("inputAmount = ", inputAmount)
-console.log ("INFURA_SEPOLIA_TEST_URL = ",INFURA_SEPOLIA_TEST_URL)
+console.log ("SEPOLIA_INFURA_TEST_URL = ",SEPOLIA_INFURA_TEST_URL)
 
 async function main() {
   console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
