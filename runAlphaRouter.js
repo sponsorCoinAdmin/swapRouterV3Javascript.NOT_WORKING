@@ -5,7 +5,7 @@ const { ethers, BigNumber } = require('ethers')
 const JSBI  = require('jsbi') // jsbi@3.2.5
 
 // const V3_SWAP_ROUTER_ADDRESS = '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45'
-let V3_SWAP_ROUTER_ADDRESS = process.env.SWAPROUTER_025
+let V3_SWAP_ROUTER_ADDRESS = process.env.UNISWAP_SWAPROUTER_025
 
 const WALLET_ADDRESS = process.env.WALLET_ADDRESS
 const WALLET_SECRET = process.env.WALLET_SECRET
