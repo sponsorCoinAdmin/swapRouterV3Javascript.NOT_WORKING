@@ -1,0 +1,3 @@
+[submodule "setupEnv"]
+	path = setupEnv
+	url = git@github.com:sponsorCoinAdmin/spCoinSetupEnv.git
