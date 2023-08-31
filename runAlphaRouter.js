@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { AlphaRouter } = require('@uniswap/smart-order-router')
 const { Token, CurrencyAmount, TradeType, Percent } = require('@uniswap/sdk-core')
 const { ethers, BigNumber } = require('ethers')
@@ -5,7 +6,6 @@ const JSBI  = require('jsbi') // jsbi@3.2.5
 
 const V3_SWAP_ROUTER_ADDRESS = '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45'
 
-require('dotenv').config()
 const WALLET_ADDRESS = process.env.WALLET_ADDRESS
 const WALLET_SECRET = process.env.WALLET_SECRET
 const INFURA_TEST_URL = process.env.INFURA_TEST_URL
@@ -23,13 +23,16 @@ const address0 = '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
 const name1 = 'Uniswap Token'
 const symbol1 = 'UNI'
 const decimals1 = 18
-const address1 = '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'
+const address1 = process.env.GOERLI_SPCOIN
+console.log("process.env.GOERLI_UNI", process.env.GOERLI_UNI)
 
 const WETH = new Token(chainId, address0, decimals0, symbol0, name0)
 const UNI = new Token(chainId, address1, decimals1, symbol1, name1)
 
-const wei = ethers.utils.parseUnits('0.01', 18)
+const wei = ethers.utils.parseUnits('1', 18)
 const inputAmount = CurrencyAmount.fromRawAmount(WETH, JSBI.BigInt(wei))
+console.log("wei          = " , wei)
+// console.log("Input Amount = " , inputAmount)
 
 async function main() {
   const route = await router.route(
@@ -64,7 +67,6 @@ async function main() {
     V3_SWAP_ROUTER_ADDRESS,
     approvalAmount
   )
-
   const tradeTransaction = await connectedWallet.sendTransaction(transaction)
 }
 
