@@ -34,6 +34,9 @@ const UNI = new Token(CHAIN_ID, address1, decimals1, symbol1, name1)
 const wei = ethers.utils.parseUnits('0.01', 18)
 const inputAmount = CurrencyAmount.fromRawAmount(WETH, JSBI.BigInt(wei))
 
+const bigIntToDecString = ( _value ) => { return bigIntToString(_value, 10); };
+const bigIntToString = ( _value, _base ) => { return BigInt(_value).toString(_base); };
+
 async function main() {
   NETWORK=process.env.NETWORK
   console.log("==================================================================================================================================")
@@ -47,13 +50,13 @@ async function main() {
   console.log("NETWORK CHAIN_ID:" , NETWORK, "=", CHAIN_ID)
   console.log("TOKEN 0 NAME:", name0, ", SYMBOL:", symbol0 + ", DECIMALS:", decimals0 + ", ADDRESS:", address0 )
   console.log("TOKEN 1 NAME:", name1, ", SYMBOL:", symbol1 + ", DECIMALS:", decimals1 + ", ADDRESS:", address1 )
-  console.log("INPUT WEI AMOUNT:",wei)
+  console.log("INPUT WEI AMOUNT:", bigIntToString(wei))
 
   console.log("==================================================================================================================================")
   await runAlphaRouterSWAP()
 }
 
-async function runAlphaRouterSWAP() {
+runAlphaRouterSWAP = async() => {
   const route = await router.route(
     inputAmount,
     UNI,
