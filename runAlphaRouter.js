@@ -8,12 +8,12 @@ const V3_SWAP_ROUTER_ADDRESS = process.env.UNISWAP_SWAPROUTER_02
 
 const WALLET_ADDRESS = process.env.WALLET_ADDRESS
 const WALLET_SECRET = process.env.WALLET_SECRET
-const INFURA_TEST_URL = process.env.INFURA_TEST_URL
+const INFURA_TEST_URL = process.env.GOERLI_INFURA_TEST_URL
 
 const web3Provider = new ethers.providers.JsonRpcProvider(INFURA_TEST_URL) // Ropsten
 
-const chainId = 5
-const router = new AlphaRouter({ chainId: chainId, provider: web3Provider})
+const CHAIN_ID = 5
+const router = new AlphaRouter({ chainId: CHAIN_ID, provider: web3Provider})
 
 const name0 = 'Wrapped Ether'
 const symbol0 = 'WETH'
@@ -28,13 +28,32 @@ const decimals1 = 18
 // const address1 = process.env.GOERLI_SPCOIN
 const address1 = process.env.GOERLI_UNI
 
-const WETH = new Token(chainId, address0, decimals0, symbol0, name0)
-const UNI = new Token(chainId, address1, decimals1, symbol1, name1)
+const WETH = new Token(CHAIN_ID, address0, decimals0, symbol0, name0)
+const UNI = new Token(CHAIN_ID, address1, decimals1, symbol1, name1)
 
 const wei = ethers.utils.parseUnits('0.01', 18)
 const inputAmount = CurrencyAmount.fromRawAmount(WETH, JSBI.BigInt(wei))
 
 async function main() {
+  NETWORK=process.env.NETWORK
+  console.log("==================================================================================================================================")
+  console.log("Alpha Router Swap Parameters set as follows")
+  console.log("==================================================================================================================================")
+  console.log("NETWORK:" , NETWORK)
+  console.log("V3_SWAP_ROUTER_ADDRESS:" , V3_SWAP_ROUTER_ADDRESS)
+  console.log("WALLET_ADDRESS: {My test Wallet}")
+  console.log("WALLET_SECRET: {My private test wallet Key}")
+  console.log("INFURA_TEST_URL: {My personal INFURA_TEST_URL}")
+  console.log("NETWORK CHAIN_ID:" , NETWORK, "=", CHAIN_ID)
+  console.log("TOKEN 0 NAME:", name0, ", SYMBOL:", symbol0 + ", DECIMALS:", decimals0 + ", ADDRESS:", address0 )
+  console.log("TOKEN 1 NAME:", name1, ", SYMBOL:", symbol1 + ", DECIMALS:", decimals1 + ", ADDRESS:", address1 )
+  console.log("INPUT WEI AMOUNT:",wei)
+
+  console.log("==================================================================================================================================")
+  await runAlphaRouterSWAP()
+}
+
+async function runAlphaRouterSWAP() {
   const route = await router.route(
     inputAmount,
     UNI,
