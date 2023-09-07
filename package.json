@@ -15,6 +15,7 @@
         "@uniswap/smart-order-router": "^2.5.30",
         "dotenv": "^16.3.1",
         "ethers": "^5.6.6",
+        "hardhat-shorthand": "^1.0.0",
         "jsbi": "^3.2.5"
     }
 }
