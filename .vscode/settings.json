@@ -1,9 +1,14 @@
 {
     "cSpell.words": [
+        "ethersproject",
+        "GÖRLI",
         "hexlify",
         "jsbi",
+        "multicall",
+        "Nonfungible",
         "SEPOLIA",
         "SPCT",
+        "Staker",
         "SWAPROUTER"
     ]
 }
