@@ -1,77 +1,100 @@
 require('dotenv').config()
-const { AlphaRouter } = require('@uniswap/smart-order-router')
+const { AlphaRouter, ChainId, SwapType } = require('@uniswap/smart-order-router')
 const { Token, CurrencyAmount, TradeType, Percent } = require('@uniswap/sdk-core')
 const { ethers, BigNumber } = require('ethers')
 const JSBI  = require('jsbi') // jsbi@3.2.5
 
-let NETWORK
 
-let V3_SWAP_ROUTER_ADDRESS = process.env.UNISWAP_SWAPROUTER_02
-
+// USER WALLET SETUP
 let WALLET_ADDRESS = process.env.WALLET_ADDRESS
 let WALLET_SECRET = process.env.WALLET_SECRET
-let INFURA_TEST_URL = process.env.GOERLI_INFURA_TEST_URL
 
-let web3Provider = new ethers.providers.JsonRpcProvider(INFURA_TEST_URL) // Ropsten
+// NETWORK REQUIREMENTS
+let NETWORK
+let CHAIN_ID
+let INFURA_TEST_URL
+let web3Provider
 
-// let CHAIN_ID = 5
-let CHAIN_ID = parseInt(process.env.GOERLI_CHAIN_ID)
-
-let router = new AlphaRouter({ chainId: CHAIN_ID, provider: web3Provider})
+// UNISWAP REQUIREMENTS
+let V3_SWAP_ROUTER_ADDRESS
+let router
 
 let name0 = 'Wrapped Ether'
 let symbol0 = 'WETH'
 let decimals0 = 18
-let address0 = process.env.GOERLI_WETH
-// const address0 = '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
+let address0
 
 let name1 = 'Uniswap Token'
 let symbol1 = 'UNI'
 let decimals1 = 18
-// const address1 = '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'
-// const address1 = process.env.GOERLI_SPCOIN
-let address1 = process.env.GOERLI_UNI
+let address1
 
-let WETH = new Token(CHAIN_ID, address0, decimals0, symbol0, name0)
-let UNI = new Token(CHAIN_ID, address1, decimals1, symbol1, name1)
+let WETH
+let UNI
 
-let wei = ethers.utils.parseUnits('0.01', 18)
-let inputAmount = CurrencyAmount.fromRawAmount(WETH, JSBI.BigInt(wei))
+let wei
+let inputAmount
 
 let bigIntToDecString = ( _value ) => { return bigIntToString(_value, 10); };
 let bigIntToString = ( _value, _base ) => { return BigInt(_value).toString(_base); };
 
-////////////////////////////////////////
-
-async function setNetwork(_network) {
+setNetwork = async(_network) => {
   NETWORK=_network
     switch(NETWORK) {
       case "GOERLI": {
-        CHAIN_ID = parseInt(process.env.GOERLI_CHAIN_ID)
+        CHAIN_ID = ChainId.GÖRLI
+        INFURA_TEST_URL = process.env.GOERLI_INFURA_TEST_URL
+        V3_SWAP_ROUTER_ADDRESS = process.env.GOERLI_UNISWAP_SWAPROUTER_02
+        address0 = process.env.GOERLI_WETH
+        address1 = process.env.GOERLI_UNI
+
       }
       break;
       case "SEPOLIA":{
         CHAIN_ID = parseInt(process.env.SEPOLIA_CHAIN_ID)
+        INFURA_TEST_URL = process.env.SEPOLIA_INFURA_TEST_URL
+        V3_SWAP_ROUTER_ADDRESS = process.env.SEPOLIA_UNISWAP_SWAPROUTER_02
+        address0 = process.env.SEPOLIA_WETH
+        address1 = process.env.SEPOLIA_UNI
       }
       break;
       case "MAINNET":{
         CHAIN_ID = parseInt(process.env.MAINNET_CHAIN_ID)
+        INFURA_TEST_URL = process.env.MAINNET_INFURA_TEST_URL
+        V3_SWAP_ROUTER_ADDRESS = process.env.MAINNET_UNISWAP_SWAPROUTER_02
       }
       break;
       default:{
         return false
       }
     }
-    router = new AlphaRouter({ chainId: CHAIN_ID, provider: web3Provider})
+    web3Provider = new ethers.providers.JsonRpcProvider(INFURA_TEST_URL)
+    console.log("provider = ",web3Provider)
+    console.log("chainId = ",CHAIN_ID)
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    try {
+       router = new AlphaRouter({ chainId: CHAIN_ID, provider: web3Provider})
+    }
+    catch(err){
+      console.error(err);
+      console.log("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS EXITING");
+      process.exit(1);
+    };
+    console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
     WETH = new Token(CHAIN_ID, address0, decimals0, symbol0, name0)
+    console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
     UNI = new Token(CHAIN_ID, address1, decimals1, symbol1, name1)
-    let wei = ethers.utils.parseUnits('0.01', 18)
-    let inputAmount = CurrencyAmount.fromRawAmount(WETH, JSBI.BigInt(wei))
+    wei = ethers.utils.parseUnits('0.01', 18)
+    console.log("INPUT WEI AMOUNT:", wei)
+    console.log("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
+    inputAmount = CurrencyAmount.fromRawAmount(WETH, JSBI.BigInt(wei))
+    router = new AlphaRouter({ chainId: CHAIN_ID, provider: web3Provider})
     return true;
   }
-/////////////////////////////////////////
-async function main() {
-  NETWORK=process.env.NETWORK
+
+main = async() => {
+  // setNetwork(process.env.GOERLI_NETWORK_NAME)
+  setNetwork(process.env.SEPOLIA_NETWORK_NAME)
   console.log("==================================================================================================================================")
   console.log("Alpha Router Swap Parameters set as follows")
   console.log("==================================================================================================================================")
@@ -83,11 +106,20 @@ async function main() {
   console.log("NETWORK CHAIN_ID:" , NETWORK, "=", CHAIN_ID)
   console.log("TOKEN 0 NAME:", name0, ", SYMBOL:", symbol0 + ", DECIMALS:", decimals0 + ", ADDRESS:", address0 )
   console.log("TOKEN 1 NAME:", name1, ", SYMBOL:", symbol1 + ", DECIMALS:", decimals1 + ", ADDRESS:", address1 )
-  console.log("INPUT WEI AMOUNT:", bigIntToString(wei))
+  console.log("INPUT WEI AMOUNT:", wei)
+  console.log("INPUT WEI AMOUNT:", bigIntToDecString(wei))
 
   console.log("==================================================================================================================================")
   await runAlphaRouterSWAP()
 }
+
+// const options = {
+//   recipient: WALLET_ADDRESS, 
+//   slippageTolerance: new Percent(10, 1000), 
+//   deadline: Math.floor(Date.now() / 1000 + 1800), 
+//   type: SwapType.SWAPROUTER_02,
+//   }
+
 
 runAlphaRouterSWAP = async() => {
   const route = await router.route(
@@ -101,6 +133,7 @@ runAlphaRouterSWAP = async() => {
     }
   )
 
+  console.log("SwapType =",SwapType)
   console.log(`Quote Exact In: ${route.quote.toFixed(10)}`)
 
   const transaction = {
